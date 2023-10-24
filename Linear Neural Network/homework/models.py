@@ -4,57 +4,31 @@ import torch.nn.functional as F
 
 class ClassificationLoss(torch.nn.Module):
     def forward(self, input, target):
-        """
-        Your code here
-
-        Compute mean(-log(softmax(input)_label))
-
-        @input:  torch.Tensor((B,C))
-        @target: torch.Tensor((B,), dtype=torch.int64)
-
-        @return:  torch.Tensor((,))
-
-        Hint: Don't be too fancy, this is a one-liner
-        """
-        raise NotImplementedError('ClassificationLoss.forward')
+        return F.cross_entropy(input = input, target = target)
 
 
 class LinearClassifier(torch.nn.Module):
     def __init__(self):
         super().__init__()
-
-        """
-        Your code here
-        """
-        raise NotImplementedError('LinearClassifier.__init__')
+        self.network = torch.nn.Linear(3 * 64 * 64, 6)
 
     def forward(self, x):
-        """
-        Your code here
-
-        @x: torch.Tensor((B,3,64,64))
-        @return: torch.Tensor((B,6))
-        """
-        raise NotImplementedError('LinearClassifier.forward')
+        return self.network(x.view(x.size(0), -1))
 
 
 class MLPClassifier(torch.nn.Module):
     def __init__(self):
         super().__init__()
-
-        """
-        Your code here
-        """
-        raise NotImplementedError('MLPClassifier.__init__')
+        self.network = torch.nn.Sequential(
+            torch.nn.Linear(3 * 64 * 64, 200),
+            torch.nn.ReLU(),
+            torch.nn.Linear(200, 400),
+            torch.nn.ReLU(),
+            torch.nn.Linear(400, 6)
+        )
 
     def forward(self, x):
-        """
-        Your code here
-
-        @x: torch.Tensor((B,3,64,64))
-        @return: torch.Tensor((B,6))
-        """
-        raise NotImplementedError('MLPClassifier.forward')
+        return self.network(x.view(x.size(0), -1))
 
 
 model_factory = {
